@@ -56,16 +56,17 @@ public class SecurityBoardServiceImpl implements SecurityBoardService {
 		if(board == null) {
 			throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
 		}
+
 		return board;
 	}
 
 	@Override
 	public Map<String, Object> getSecurityBoardList(Map<String, Object> map) {
 		int pageNum=1;
-		if(map.get("pageNum") != null) {
+		if(map.get("pageNum") != null && !map.get("pageNum").equals("")) {
 			pageNum=Integer.parseInt((String)map.get("pageNum"));
 		}
-		int pageSize=2;
+		int pageSize=5;
 		int totalBoard=securityBoardRepository.selectSecurityBoardCount(map);
 		int blockSize=5;
 		
@@ -82,6 +83,7 @@ public class SecurityBoardServiceImpl implements SecurityBoardService {
 		return result;
 	}
 }
+
 
 
 

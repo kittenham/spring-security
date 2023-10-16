@@ -34,9 +34,11 @@ th, td {
 	<h1>게시글 목록</h1>
 	<hr>
 	<div id="container">
-		<div style="text-align: right;">
-			<button type="button">글쓰기</button>
-		</div>
+		<sec:authorize access="isAuthenticated()">
+			<div style="text-align: right; margin-bottom: 10px;">
+				<button type="button" onclick="location.href='<c:url value="/board/register"/>';">글쓰기</button>
+			</div>
+		</sec:authorize>
 		<table>
 			<tr>
 				<th class="idx">글번호</th>
@@ -54,8 +56,8 @@ th, td {
 					<c:forEach var="securityBoard" items="${result.securityBoardList}">
 						<tr>
 							<td>${securityBoard.idx}</td>
-							<td>${securityBoard.writer}</td>
-							<td>${securityBoard.subject}</td>
+							<td>${securityBoard.name}</td>
+							<td><a href="<c:url value="/board/detail"/>?idx=${securityBoard.idx }&pageNum=${search.pageNum}&column=${search.column}&keyword=${search.keyword}">${securityBoard.subject}</a></td>
 							<td>${securityBoard.regdate}</td>
 						</tr>
 					</c:forEach>
@@ -66,7 +68,7 @@ th, td {
 		<div style="text-align: center;">
 			<c:choose>
 				<c:when test="${result.pager.startPage > result.pager.blockSize }">
-					<a href="<c:url value="/board/list"/>?pageNum=${pager.prevPage}&column=${search.column}&keyword=${search.keyword}">[이전]</a>
+					<a href="<c:url value="/board/list"/>?pageNum=${result.pager.prevPage}&column=${search.column}&keyword=${search.keyword}">[이전]</a>
 				</c:when>
 				<c:otherwise>
 					[이전]
@@ -83,9 +85,10 @@ th, td {
 					</c:otherwise>
 				</c:choose>	
 			</c:forEach>
+			
 			<c:choose>
 				<c:when test="${result.pager.endPage != result.pager.totalPage }">
-					<a href="<c:url value="/board/list"/>?pageNum=${pager.nextPage}&column=${search.column}&keyword=${search.keyword}">[이전]</a>
+					<a href="<c:url value="/board/list"/>?pageNum=${result.pager.nextPage}&column=${search.column}&keyword=${search.keyword}">[이전]</a>
 				</c:when>
 				<c:otherwise>
 					[다음]
@@ -96,7 +99,7 @@ th, td {
 		<div style="text-align: center;">
 			<form action="<c:url value="/board/list"/>" method="post">
 				<select name="column">
-					<option value="writer">작성자</option>
+					<option value="name">작성자</option>
 					<option value="subject">제목</option>
 					<option value="content">내용</option>
 				</select>
